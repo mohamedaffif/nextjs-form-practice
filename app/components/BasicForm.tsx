@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import ConfirmDeleteModal from "./ConfirmDeleteModal";
+// import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import Modal from "./Modal";
+import deepEqual from "../utils";
 type FormRecord = {
   name: string;
   email: string;
@@ -97,6 +98,10 @@ function BasicForm() {
   function handleDelete(index: number) {
     setRecords((prev) => prev.filter((_, i) => i !== index));
   }
+
+  const hasChanges =
+  originalRecord !== null && !deepEqual(editForm, originalRecord);
+
 
   
   return (
@@ -311,7 +316,9 @@ function BasicForm() {
               )
             );
             setEditIndex(null);
+            setOriginalRecord(null);
           }}
+          disabled={!hasChanges}
           className="bg-blue-500 text-white px-3 py-1 rounded"
         >
           Save
