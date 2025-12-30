@@ -100,10 +100,8 @@ function BasicForm() {
   }
 
   const hasChanges =
-  originalRecord !== null && !deepEqual(editForm, originalRecord);
+    originalRecord !== null && !deepEqual(editForm, originalRecord);
 
-
-  
   return (
     <div>
       <form
@@ -208,8 +206,8 @@ function BasicForm() {
                   type="button"
                   onClick={() => {
                     setEditIndex(index);
-                    setEditForm(record);
-                    setOriginalRecord(record);
+                    setEditForm({ ...record });
+                    setOriginalRecord({ ...record });
                   }}
                   className="text-blue-600 text-sm mr-3"
                 >
@@ -218,7 +216,10 @@ function BasicForm() {
 
                 <button
                   type="button"
-                  onClick={() => setDeleteIndex(index)}
+                  onClick={() => {
+                    setEditIndex(null);
+                    setOriginalRecord(null);
+                  }}
                   className="text-red-600 text-sm"
                 >
                   Delete
@@ -247,87 +248,87 @@ function BasicForm() {
             </Modal>
           )}
           {editIndex !== null && (
-  <Modal
-    title="Edit record"
-    onClose={() => setEditIndex(null)}
-  >
-    <div className="flex flex-col gap-3">
-      <input
-        name="name"
-        value={editForm.name}
-        onChange={handleEdit}
-        className="border p-2 rounded"
-        placeholder="Name"
-      />
+            <Modal
+              title="Edit record"
+              onClose={() => {
+                setEditIndex(null);
+                setOriginalRecord(null);
+              }}
+            >
+              <div className="flex flex-col gap-3">
+                <input
+                  name="name"
+                  value={editForm.name}
+                  onChange={handleEdit}
+                  className="border p-2 rounded"
+                  placeholder="Name"
+                />
 
-      <input
-        name="email"
-        value={editForm.email}
-        onChange={handleEdit}
-        className="border p-2 rounded"
-        placeholder="Email"
-      />
+                <input
+                  name="email"
+                  value={editForm.email}
+                  onChange={handleEdit}
+                  className="border p-2 rounded"
+                  placeholder="Email"
+                />
 
-      <label className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          name="agreed"
-          checked={editForm.agreed}
-          onChange={handleEdit}
-        />
-        Agreed
-      </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    name="agreed"
+                    checked={editForm.agreed}
+                    onChange={handleEdit}
+                  />
+                  Agreed
+                </label>
 
-      <label className="flex items-center gap-2">
-        <input
-          type="radio"
-          name="role"
-          value="user"
-          checked={editForm.role === "user"}
-          onChange={handleEdit}
-        />
-        User
-      </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="role"
+                    value="user"
+                    checked={editForm.role === "user"}
+                    onChange={handleEdit}
+                  />
+                  User
+                </label>
 
-      <label className="flex items-center gap-2">
-        <input
-          type="radio"
-          name="role"
-          value="admin"
-          checked={editForm.role === "admin"}
-          onChange={handleEdit}
-        />
-        Admin
-      </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="role"
+                    value="admin"
+                    checked={editForm.role === "admin"}
+                    onChange={handleEdit}
+                  />
+                  Admin
+                </label>
 
-      <div className="flex justify-end gap-2 mt-4">
-        <button
-          onClick={() => setEditIndex(null)}
-          className="border px-3 py-1 rounded"
-        >
-          Cancel
-        </button>
+                <div className="flex justify-end gap-2 mt-4">
+                  <button
+                    onClick={() => setEditIndex(null)}
+                    className="border px-3 py-1 rounded"
+                  >
+                    Cancel
+                  </button>
 
-        <button
-          onClick={() => {
-            setRecords((prev) =>
-              prev.map((rec, i) =>
-                i === editIndex ? editForm : rec
-              )
-            );
-            setEditIndex(null);
-            setOriginalRecord(null);
-          }}
-          disabled={!hasChanges}
-          className="bg-blue-500 text-white px-3 py-1 rounded"
-        >
-          Save
-        </button>
-      </div>
-    </div>
-  </Modal>
-)}
-
+                  <button
+                    onClick={() => {
+                      setRecords((prev) =>
+                        prev.map((rec, i) => (i === editIndex ? editForm : rec))
+                      );
+                      setEditIndex(null);
+                      setOriginalRecord(null);
+                    }}
+                    disabled={!hasChanges}
+                    className="bg-blue-500 text-white px-3 py-1 rounded"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </Modal>
+          )}
         </div>
       )}
     </div>
