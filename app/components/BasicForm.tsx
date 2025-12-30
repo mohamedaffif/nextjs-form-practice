@@ -321,7 +321,10 @@ function BasicForm() {
                       setOriginalRecord(null);
                     }}
                     disabled={!hasChanges}
-                    className="bg-blue-500 text-white px-3 py-1 rounded"
+                    className="bg-blue-500 text-white px-3 py-1 rounded  disabled:bg-gray-300
+    disabled:text-gray-500
+    disabled:cursor-not-allowed
+    disabled:opacity-60"
                   >
                     Save
                   </button>
