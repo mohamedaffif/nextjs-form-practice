@@ -19,6 +19,7 @@ function BasicForm() {
     role: "",
   });
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
+  const [showDiscardWarning, setShowDiscardWarning] = useState(false);
 
   const [records, setRecords] = useState<FormRecord[]>([]);
   const [form, setForm] = useState({
@@ -77,8 +78,6 @@ function BasicForm() {
       agreed: false,
       role: "",
     });
-
-    console.log("Form data:", form);
   }
   useEffect(() => {
     const stored = localStorage.getItem("records");
@@ -101,6 +100,20 @@ function BasicForm() {
 
   const hasChanges =
     originalRecord !== null && !deepEqual(editForm, originalRecord);
+
+  function requestCloseEdit() {
+    if (hasChanges) {
+      setShowDiscardWarning(true);
+    } else {
+      closeEdit();
+    }
+  }
+
+  function closeEdit() {
+    setEditIndex(null);
+    setOriginalRecord(null);
+    setShowDiscardWarning(false);
+  }
 
   return (
     <div>
@@ -217,6 +230,7 @@ function BasicForm() {
                 <button
                   type="button"
                   onClick={() => {
+                    setDeleteIndex(index);
                     setEditIndex(null);
                     setOriginalRecord(null);
                   }}
@@ -235,10 +249,11 @@ function BasicForm() {
                 <button onClick={() => setDeleteIndex(null)}>Cancel</button>
                 <button
                   onClick={() => {
-                    setRecords((prev) =>
-                      prev.filter((_, i) => i !== deleteIndex)
-                    );
+                    if(deleteIndex !== null) handleDelete(deleteIndex);
                     setDeleteIndex(null);
+                    // setRecords((prev) =>
+                    //   prev.filter((_, i) => i !== deleteIndex)
+                    // );
                   }}
                   className="bg-red-500 text-white"
                 >
@@ -250,10 +265,13 @@ function BasicForm() {
           {editIndex !== null && (
             <Modal
               title="Edit record"
-              onClose={() => {
-                setEditIndex(null);
-                setOriginalRecord(null);
-              }}
+              onClose={
+                requestCloseEdit
+                //   () => {
+                //   setEditIndex(null);
+                //   setOriginalRecord(null);
+                // }
+              }
             >
               <div className="flex flex-col gap-3">
                 <input
@@ -306,7 +324,7 @@ function BasicForm() {
 
                 <div className="flex justify-end gap-2 mt-4">
                   <button
-                    onClick={() => setEditIndex(null)}
+                    onClick={requestCloseEdit}
                     className="border px-3 py-1 rounded"
                   >
                     Cancel
@@ -329,6 +347,32 @@ function BasicForm() {
                     Save
                   </button>
                 </div>
+              </div>
+            </Modal>
+          )}
+          {showDiscardWarning && (
+            <Modal
+              title="Discard changes?"
+              onClose={() => setShowDiscardWarning(false)}
+            >
+              <p className="text-sm text-gray-600">
+                You have unsaved changes. If you close now, they will be lost.
+              </p>
+
+              <div className="flex justify-end gap-2 mt-4">
+                <button
+                  onClick={() => setShowDiscardWarning(false)}
+                  className="border px-3 py-1 rounded"
+                >
+                  Continue editing
+                </button>
+
+                <button
+                  onClick={closeEdit}
+                  className="bg-red-500 text-white px-3 py-1 rounded"
+                >
+                  Discard
+                </button>
               </div>
             </Modal>
           )}
