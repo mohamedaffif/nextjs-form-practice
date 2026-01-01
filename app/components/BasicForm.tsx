@@ -5,6 +5,8 @@ import Modal from "./Modal";
 import deepEqual from "../utils";
 import CreateForm from "./CreateForm";
 import RecordsList from "./RecordsList";
+import DeleteConfirmModal from "./DeleteConfirmModal";
+import EditModal from "./EditModal";
 type FormRecord = {
   name: string;
   email: string;
@@ -144,28 +146,17 @@ function BasicForm() {
             }}
             onClearAll={handleClear}
           />
-          
-          {deleteIndex !== null && (
-            <Modal title="Confirm delete" onClose={() => setDeleteIndex(null)}>
-              <p>This action cannot be undone.</p>
 
-              <div className="flex justify-end gap-2 mt-4">
-                <button onClick={() => setDeleteIndex(null)}>Cancel</button>
-                <button
-                  onClick={() => {
-                    if (deleteIndex !== null) handleDelete(deleteIndex);
-                    setDeleteIndex(null);
-                    // setRecords((prev) =>
-                    //   prev.filter((_, i) => i !== deleteIndex)
-                    // );
-                  }}
-                  className="bg-red-500 text-white"
-                >
-                  Delete
-                </button>
-              </div>
-            </Modal>
-          )}
+          <DeleteConfirmModal
+            isOpen={deleteIndex !== null}
+            onClose={() => setDeleteIndex(null)}
+            onConfirm={() => {
+              if (deleteIndex !== null) handleDelete(deleteIndex);
+              setDeleteIndex(null);
+            }}
+          />
+
+        <EditModal />
           {editIndex !== null && (
             <Modal
               title="Edit record"
