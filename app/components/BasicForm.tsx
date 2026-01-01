@@ -6,7 +6,7 @@ import deepEqual from "../utils";
 import CreateForm from "./CreateForm";
 import RecordsList from "./RecordsList";
 import DeleteConfirmModal from "./DeleteConfirmModal";
-import EditModal from "./EditModal";
+import EditRecordModal from "./EditRecordModal";
 type FormRecord = {
   name: string;
   email: string;
@@ -156,95 +156,22 @@ function BasicForm() {
             }}
           />
 
-        <EditModal />
-          {editIndex !== null && (
-            <Modal
-              title="Edit record"
-              onClose={
-                requestCloseEdit
-                //   () => {
-                //   setEditIndex(null);
-                //   setOriginalRecord(null);
-                // }
-              }
-            >
-              <div className="flex flex-col gap-3">
-                <input
-                  name="name"
-                  value={editForm.name}
-                  onChange={handleEdit}
-                  className="border p-2 rounded"
-                  placeholder="Name"
-                />
-
-                <input
-                  name="email"
-                  value={editForm.email}
-                  onChange={handleEdit}
-                  className="border p-2 rounded"
-                  placeholder="Email"
-                />
-
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    name="agreed"
-                    checked={editForm.agreed}
-                    onChange={handleEdit}
-                  />
-                  Agreed
-                </label>
-
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="user"
-                    checked={editForm.role === "user"}
-                    onChange={handleEdit}
-                  />
-                  User
-                </label>
-
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="admin"
-                    checked={editForm.role === "admin"}
-                    onChange={handleEdit}
-                  />
-                  Admin
-                </label>
-
-                <div className="flex justify-end gap-2 mt-4">
-                  <button
-                    onClick={requestCloseEdit}
-                    className="border px-3 py-1 rounded"
-                  >
-                    Cancel
-                  </button>
-
-                  <button
-                    onClick={() => {
+        <EditRecordModal 
+      
+        editForm={editForm} 
+        isOpen={editIndex !== null}
+        hasChanges={hasChanges}
+        onClose={requestCloseEdit}
+        onChange={handleEdit}
+        onSave = {() => {
                       setRecords((prev) =>
                         prev.map((rec, i) => (i === editIndex ? editForm : rec))
                       );
                       setEditIndex(null);
                       setOriginalRecord(null);
                     }}
-                    disabled={!hasChanges}
-                    className="bg-blue-500 text-white px-3 py-1 rounded  disabled:bg-gray-300
-                            disabled:text-gray-500
-                              disabled:cursor-not-allowed
-                               disabled:opacity-60"
-                  >
-                    Save
-                  </button>
-                </div>
-              </div>
-            </Modal>
-          )}
+        />
+          
           {showDiscardWarning && (
             <Modal
               title="Discard changes?"
