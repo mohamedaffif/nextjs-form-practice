@@ -1,4 +1,4 @@
-// CreateForm.tsx
+'use client';
 type CreateFormProps = {
   form: {
     name: string;

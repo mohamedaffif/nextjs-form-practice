@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import deepEqual from "../utils";
 import CreateForm from "./CreateForm";
+import RecordsList from "./RecordsList";
 type FormRecord = {
   name: string;
   email: string;
@@ -125,62 +126,25 @@ function BasicForm() {
         onChange={handleChange}
         onSubmit={handleSubmit}
       />
-      
+
       {/* Records section */}
       {records.length > 0 && (
         <div className="mt-10">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold">Submitted Records</h2>
-            <button
-              type="button"
-              onClick={handleClear}
-              className="bg-red-500 text-white px-3 py-1 rounded"
-            >
-              Delete All
-            </button>
-          </div>
-
-          <ul className="space-y-3">
-            {records.map((record, index) => (
-              <li key={index} className="border p-3 rounded bg-gray-50">
-                <p>
-                  <strong>Name:</strong> {record.name}
-                </p>
-                <p>
-                  <strong>Email:</strong> {record.email}
-                </p>
-                <p>
-                  <strong>Role:</strong> {record.role}
-                </p>
-                <p>
-                  <strong>Agreed:</strong> {record.agreed ? "Yes" : "No"}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEditIndex(index);
-                    setEditForm({ ...record });
-                    setOriginalRecord({ ...record });
-                  }}
-                  className="text-blue-600 text-sm mr-3"
-                >
-                  Edit
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setDeleteIndex(index);
-                    setEditIndex(null);
-                    setOriginalRecord(null);
-                  }}
-                  className="text-red-600 text-sm"
-                >
-                  Delete
-                </button>
-              </li>
-            ))}
-          </ul>
+          <RecordsList
+            records={records}
+            onEdit={(record, index) => {
+              setEditIndex(index);
+              setEditForm({ ...record });
+              setOriginalRecord({ ...record });
+            }}
+            onDelete={(index) => {
+              setDeleteIndex(index);
+              setEditIndex(null);
+              setOriginalRecord(null);
+            }}
+            onClearAll={handleClear}
+          />
+          
           {deleteIndex !== null && (
             <Modal title="Confirm delete" onClose={() => setDeleteIndex(null)}>
               <p>This action cannot be undone.</p>
@@ -280,9 +244,9 @@ function BasicForm() {
                     }}
                     disabled={!hasChanges}
                     className="bg-blue-500 text-white px-3 py-1 rounded  disabled:bg-gray-300
-    disabled:text-gray-500
-    disabled:cursor-not-allowed
-    disabled:opacity-60"
+                            disabled:text-gray-500
+                              disabled:cursor-not-allowed
+                               disabled:opacity-60"
                   >
                     Save
                   </button>
