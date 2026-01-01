@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 // import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import Modal from "./Modal";
 import deepEqual from "../utils";
-import CreateForm from "./CreateForm";
 type FormRecord = {
   name: string;
   email: string;
@@ -118,14 +117,75 @@ function BasicForm() {
 
   return (
     <div>
-      <CreateForm
-        form={form}
-        errors={errors}
-        submitted={submitted}
-        onChange={handleChange}
+      <form
+        className="mt-6 flex flex-col gap-4 max-w-sm"
         onSubmit={handleSubmit}
-      />
-      
+      >
+        <input
+          name="name"
+          value={form.name}
+          placeholder="name"
+          onChange={handleChange}
+          className="border p-2 rounded"
+        />
+        {submitted && errors.name && (
+          <p className="text-red-500 text-sm">{errors.name}</p>
+        )}
+        <input
+          name="email"
+          value={form.email}
+          placeholder="email"
+          onChange={handleChange}
+          className="border p-2 rounded"
+        />
+        {submitted && errors.email && (
+          <p className="text-red-500 text-sm">{errors.email}</p>
+        )}
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            name="agreed"
+            checked={form.agreed}
+            onChange={handleChange}
+          />
+          {submitted && errors.agreed && (
+            <p className="text-red-500 text-sm">{errors.agreed}</p>
+          )}
+          I agree to the terms
+        </label>
+        <label className="flex items-center gap-2">
+          <input
+            type="radio"
+            name="role"
+            value="user"
+            checked={form.role === "user"}
+            onChange={handleChange}
+          />
+          User
+        </label>
+
+        <label className="flex items-center gap-2">
+          <input
+            type="radio"
+            name="role"
+            value="admin"
+            checked={form.role === "admin"}
+            onChange={handleChange}
+          />
+          Admin
+        </label>
+        {submitted && errors.role && (
+          <p className="text-red-500 text-sm">{errors.role}</p>
+        )}
+
+        <button
+          type="submit"
+          disabled={!form.name || !form.email || !form.agreed || !form.role}
+          className="bg-black text-white p-2 rounded disabled:opacity-50"
+        >
+          sumbit
+        </button>
+      </form>
       {/* Records section */}
       {records.length > 0 && (
         <div className="mt-10">
@@ -189,7 +249,7 @@ function BasicForm() {
                 <button onClick={() => setDeleteIndex(null)}>Cancel</button>
                 <button
                   onClick={() => {
-                    if (deleteIndex !== null) handleDelete(deleteIndex);
+                    if(deleteIndex !== null) handleDelete(deleteIndex);
                     setDeleteIndex(null);
                     // setRecords((prev) =>
                     //   prev.filter((_, i) => i !== deleteIndex)
