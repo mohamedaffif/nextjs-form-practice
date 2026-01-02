@@ -7,6 +7,7 @@ import CreateForm from "./CreateForm";
 import RecordsList from "./RecordsList";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import EditRecordModal from "./EditRecordModal";
+import DiscardWarning from "./DiscardWarning";
 type FormRecord = {
   name: string;
   email: string;
@@ -156,23 +157,29 @@ function BasicForm() {
             }}
           />
 
-        <EditRecordModal 
-      
-        editForm={editForm} 
-        isOpen={editIndex !== null}
-        hasChanges={hasChanges}
-        onClose={requestCloseEdit}
-        onChange={handleEdit}
-        onSave = {() => {
-                      setRecords((prev) =>
-                        prev.map((rec, i) => (i === editIndex ? editForm : rec))
-                      );
-                      setEditIndex(null);
-                      setOriginalRecord(null);
-                    }}
-        />
-          
+          <EditRecordModal
+            editForm={editForm}
+            isOpen={editIndex !== null}
+            hasChanges={hasChanges}
+            onClose={requestCloseEdit}
+            onChange={handleEdit}
+            onSave={() => {
+              setRecords((prev) =>
+                prev.map((rec, i) => (i === editIndex ? editForm : rec))
+              );
+              setEditIndex(null);
+              setOriginalRecord(null);
+            }}
+          />
+
           {showDiscardWarning && (
+            <DiscardWarning
+              onClose={() => setShowDiscardWarning(false)}
+              onClick={closeEdit}
+            />
+          )}
+
+          {/* {showDiscardWarning && (
             <Modal
               title="Discard changes?"
               onClose={() => setShowDiscardWarning(false)}
@@ -197,7 +204,7 @@ function BasicForm() {
                 </button>
               </div>
             </Modal>
-          )}
+          )} */}
         </div>
       )}
     </div>
